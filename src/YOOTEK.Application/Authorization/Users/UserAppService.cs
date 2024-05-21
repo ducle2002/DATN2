@@ -32,7 +32,6 @@ using Yootek.Common.DataResult;
 using Yootek.EntityDb;
 using Yootek.Friendships;
 using Yootek.Friendships.Cache;
-using Yootek.Friendships.Dto;
 using Yootek.Notifications;
 using Yootek.Roles.Dto;
 using Yootek.Storage;

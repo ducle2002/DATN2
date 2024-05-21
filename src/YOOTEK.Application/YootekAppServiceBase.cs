@@ -4,7 +4,6 @@ using Abp.IdentityFramework;
 using Abp.Runtime.Session;
 using Abp.UI;
 using Google.Protobuf.WellKnownTypes;
-using Yootek.App.ServiceHttpClient.Dto.Yootek.SmartCommunity;
 using Yootek.Authorization.Users;
 using Yootek.MultiTenancy;
 using Yootek.Services;
@@ -19,9 +18,10 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Yootek.Common.Enum;
-using YOOTEK.EntityDb;
+using Yootek.EntityDb;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
+using Yootek.App.ServiceHttpClient.Dto.Yootek.SmartCommunity;
 
 namespace Yootek
 {
@@ -32,7 +32,7 @@ namespace Yootek
     public abstract class YootekAppServiceBase : ApplicationService
     {
         public static Benchmark mb = new Benchmark();
-        private static ConcurrentDictionary<long, List<CityNotificationDto>> UserCityNotifications = new ConcurrentDictionary<long, List<CityNotificationDto>>();
+        // private static ConcurrentDictionary<long, List<CityNotificationDto>> UserCityNotifications = new ConcurrentDictionary<long, List<CityNotificationDto>>();
         public TenantManager TenantManager { get; set; }
         public JsonSerializerSettings CamelSettings = new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() };
         public UserManager UserManager { get; set; }
@@ -246,20 +246,20 @@ namespace Yootek
         protected decimal DecimalRoudingUp(decimal value) => Math.Round(value + (decimal)0.5, 0);
         #endregion
 
-        protected UserBillPaymentMethod CheckMethod(UserBillPaymentMethod method)
-        {
-            if (method == UserBillPaymentMethod.OnePay1 ||
-                method == UserBillPaymentMethod.OnePay2 ||
-                method == UserBillPaymentMethod.OnePay3) return UserBillPaymentMethod.OnePay;
-            return method;
-        }
-
-        protected EPaymentMethod CheckMethod(EPaymentMethod method)
-        {
-            if (method == EPaymentMethod.OnePay1 ||
-                method == EPaymentMethod.OnePay2 ||
-                method == EPaymentMethod.OnePay3) return EPaymentMethod.Onepay;
-            return method;
-        }
+        // protected UserBillPaymentMethod CheckMethod(UserBillPaymentMethod method)
+        // {
+        //     if (method == UserBillPaymentMethod.OnePay1 ||
+        //         method == UserBillPaymentMethod.OnePay2 ||
+        //         method == UserBillPaymentMethod.OnePay3) return UserBillPaymentMethod.OnePay;
+        //     return method;
+        // }
+        //
+        // protected EPaymentMethod CheckMethod(EPaymentMethod method)
+        // {
+        //     if (method == EPaymentMethod.OnePay1 ||
+        //         method == EPaymentMethod.OnePay2 ||
+        //         method == EPaymentMethod.OnePay3) return EPaymentMethod.Onepay;
+        //     return method;
+        // }
     }
 }

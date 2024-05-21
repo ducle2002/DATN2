@@ -49,4 +49,7 @@
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</EmbeddedResource>
 	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="SignalR\" />
+	</ItemGroup>
 </Project>

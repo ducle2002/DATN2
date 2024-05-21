@@ -22,11 +22,9 @@ using System.IO;
 using OfficeOpenXml;
 using System.Globalization;
 using Yootek.Common.Enum;
-using Yootek.Services.SmartCommunity.ExcelBill.Dto;
 using Newtonsoft.Json;
 using DocumentFormat.OpenXml.Bibliography;
 using Yootek.Services.Dto;
-using Yootek.Application.OrganizationStructure.Dto;
 
 namespace Yootek.Services
 {
@@ -46,33 +44,34 @@ namespace Yootek.Services
         private readonly IRepository<MeterMonthly, long> _meterMonthlyRepository;
         private readonly IRepository<Meter, long> _meterRepository;
         private readonly IRepository<MeterType, long> _meterTypeRepository;
-        private readonly IRepository<AppOrganizationUnit, long> _organizationUnitRepository;
+        // private readonly IRepository<AppOrganizationUnit, long> _organizationUnitRepository;
         private readonly IRepository<BillConfig, long> _billConfigRepository;
         private readonly IRepository<UserBill, long> _userBillRepo;
         private readonly IRepository<User, long> _userRepository;
         private readonly IRepository<CitizenTemp, long> _citizenTempRepo;
         private readonly IRepository<Apartment, long> _apartmentRepository;
-        private readonly IMeterMonthlyExcelExport _meterMonthlyExcelExport;
+        // private readonly IMeterMonthlyExcelExport _meterMonthlyExcelExport;
 
         public AdminMeterMonthlyAppService(
             IRepository<MeterMonthly, long> meterMonthlyRepository,
             IRepository<Meter, long> meterRepository,
             IRepository<MeterType, long> meterTypeRepository,
-            IRepository<AppOrganizationUnit, long> organizationUnitRepository,
+            // IRepository<AppOrganizationUnit, long> organizationUnitRepository,
             IRepository<BillConfig, long> billConfigRepository,
             IRepository<User, long> userRepository,
             IRepository<UserBill, long> userBillRepo,
             IRepository<CitizenTemp, long> citizenTempRepo,
-            IRepository<Apartment, long> apartmentRepository,
-            IMeterMonthlyExcelExport meterMonthlyExcelExport)
+            IRepository<Apartment, long> apartmentRepository
+            // IMeterMonthlyExcelExport meterMonthlyExcelExport
+            )
         {
             _meterMonthlyRepository = meterMonthlyRepository;
             _meterRepository = meterRepository;
-            _organizationUnitRepository = organizationUnitRepository;
+            // _organizationUnitRepository = organizationUnitRepository;
             _userRepository = userRepository;
             _userBillRepo = userBillRepo;
             _apartmentRepository = apartmentRepository;
-            _meterMonthlyExcelExport = meterMonthlyExcelExport;
+            // _meterMonthlyExcelExport = meterMonthlyExcelExport;
             _meterTypeRepository = meterTypeRepository;
             _billConfigRepository = billConfigRepository;
             _citizenTempRepo = citizenTempRepo;
@@ -106,7 +105,7 @@ namespace Yootek.Services
                 //}
                 var month = input.Period.HasValue ? input.Period.Value.Month : 0;
                 var year = input.Period.HasValue ? input.Period.Value.Year : 0;
-                List<long> buIds = UserManager.GetAccessibleBuildingOrUrbanIds();
+                // List<long> buIds = UserManager.GetAccessibleBuildingOrUrbanIds();
 
                 IQueryable<MeterMonthlyDto> query = (from sm in _meterMonthlyRepository.GetAll()
                                                      join meter in _meterRepository.GetAll() on sm.MeterId equals meter.Id into tb_mt
@@ -128,16 +127,16 @@ namespace Yootek.Services
                                                          ApartmentCode = meter.ApartmentCode,
                                                          BuildingId = meter.BuildingId,
                                                          UrbanId = meter.UrbanId,
-                                                         BuildingName = _organizationUnitRepository.GetAll().Where(o => o.Id == meter.BuildingId)
-                                                             .Select(b => b.DisplayName).FirstOrDefault(),
-                                                         UrbanName = _organizationUnitRepository.GetAll().Where(o => o.Id == meter.UrbanId)
-                                                             .Select(b => b.DisplayName).FirstOrDefault(),
+                                                         // BuildingName = _organizationUnitRepository.GetAll().Where(o => o.Id == meter.BuildingId)
+                                                         //     .Select(b => b.DisplayName).FirstOrDefault(),
+                                                         // UrbanName = _organizationUnitRepository.GetAll().Where(o => o.Id == meter.UrbanId)
+                                                         //     .Select(b => b.DisplayName).FirstOrDefault(),
                                                          FirstValue = sm.FirstValue,
                                                          IsClosed = sm.IsClosed,
                                                          BillConfig = apartment.BillConfig,
                                                          BillType = _meterTypeRepository.GetAll().Where(m => m.Id == meter.MeterTypeId).Select(m => m.BillType).FirstOrDefault(),
                                                      })
-                    .WhereByBuildingOrUrbanIf(!IsGranted(IOCPermissionNames.Data_Admin), buIds)
+                    // .WhereByBuildingOrUrbanIf(!IsGranted(IOCPermissionNames.Data_Admin), buIds)
                     .WhereIf(input.Period.HasValue, x => x.Period.Value.Month == month && x.Period.Value.Year == year)
                     .WhereIf(input.MeterTypeId != null, x => x.MeterTypeId == input.MeterTypeId)
                     .WhereIf(input.UrbanId != null, x => x.UrbanId == input.UrbanId)
@@ -227,10 +226,10 @@ namespace Yootek.Services
                                                          BuildingId = meter.BuildingId,
                                                          UrbanId = meter.UrbanId,
                                                          FirstValue = sm.FirstValue,
-                                                         BuildingName = _organizationUnitRepository.GetAll().Where(o => o.Id == meter.BuildingId)
-                                                             .Select(b => b.DisplayName).FirstOrDefault(),
-                                                         UrbanName = _organizationUnitRepository.GetAll().Where(o => o.Id == meter.UrbanId)
-                                                             .Select(b => b.DisplayName).FirstOrDefault(),
+                                                         // BuildingName = _organizationUnitRepository.GetAll().Where(o => o.Id == meter.BuildingId)
+                                                         //     .Select(b => b.DisplayName).FirstOrDefault(),
+                                                         // UrbanName = _organizationUnitRepository.GetAll().Where(o => o.Id == meter.UrbanId)
+                                                         //     .Select(b => b.DisplayName).FirstOrDefault(),
                                                          CreatorUserName = user.FullName,
 
 
@@ -390,173 +389,173 @@ namespace Yootek.Services
             }
         }
 
-        public async Task<object> ExportMeterMonthlyExcel(ExportMeterMonthlyDto input)
-        {
-            try
-            {
-                List<long> buIds = UserManager.GetAccessibleBuildingOrUrbanIds();
-                var query = (from sm in _meterMonthlyRepository.GetAll()
-                             join meter in _meterRepository.GetAll() on sm.MeterId equals meter.Id into tb_mt
-                             from meter in tb_mt.DefaultIfEmpty()
-                             select new MeterMonthlyDto
-                             {
-                                 Id = sm.Id,
-                                 TenantId = sm.TenantId,
-                                 Period = sm.Period,
-                                 FirstValue = sm.FirstValue ?? (int?)_userBillRepo.GetAll().Where(u => u.ApartmentCode == meter.ApartmentCode).Select(u => u.IndexEndPeriod).FirstOrDefault() ?? 0,
-                                 Value = sm.Value,
-                                 MeterId = sm.MeterId,
-                                 CreationTime = sm.CreationTime,
-                                 CreatorUserId = sm.CreatorUserId ?? 0,
-                                 MeterTypeId = meter.MeterTypeId,
-                                 Name = meter.Name,
-                                 ImageUrl = sm.ImageUrl,
-                                 ApartmentCode = meter.ApartmentCode,
-                                 BuildingId = meter.BuildingId,
-                                 UrbanId = meter.UrbanId,
-                                 BuildingName = _organizationUnitRepository.GetAll().Where(o => o.Id == meter.BuildingId)
-                                     .Select(b => b.DisplayName).FirstOrDefault(),
-                                 UrbanName = _organizationUnitRepository.GetAll().Where(o => o.Id == meter.UrbanId)
-                                     .Select(b => b.DisplayName).FirstOrDefault(),
-                             })
-                    .WhereByBuildingOrUrbanIf(!IsGranted(IOCPermissionNames.Data_Admin), buIds)
-                    .WhereIf(input.Ids != null && input.Ids.Count > 0, x => input.Ids.Contains(x.Id))
-                    .WhereIf(input.MeterTypeId.HasValue, x => x.MeterTypeId == input.MeterTypeId)
-                    .AsQueryable();
-
-                var meterMonthly = await query.ToListAsync();
-                var result = _meterMonthlyExcelExport.ExportMeterMonthlyToExcel(meterMonthly);
-                return DataResult.ResultSuccess(result, "Export Success");
-            }
-            catch (Exception e)
-            {
-                var data = DataResult.ResultError(e.ToString(), "Exception !");
-                Logger.Fatal(e.Message);
-                throw;
-            }
-        }
-
-
-        public async Task<object> ImportMeterMonthlyExcel([FromForm] ImportMeterMonthlyInput input)
-        {
-            try
-            {
-                using (CurrentUnitOfWork.SetTenantId(AbpSession.TenantId))
-                {
-                    IFormFile file = input.File;
-                    string fileName = file.FileName;
-                    string fileExt = Path.GetExtension(fileName);
-                    if (fileExt != ".xlsx" && fileExt != ".xls")
-                    {
-                        return DataResult.ResultError("File not supported", "Error");
-                    }
-
-                    string filePath = Path.GetRandomFileName() + fileExt;
-
-                    using (FileStream stream = File.Create(filePath))
-                    {
-                        await file.CopyToAsync(stream);
-                        stream.Close();
-                    }
-
-                    var package = new ExcelPackage(new FileInfo(filePath));
-                    var worksheet = package.Workbook.Worksheets.First();
-                    int rowCount = worksheet.Dimension.End.Row;
-
-                    const int APARTMENT_CODE_INDEX = 1;
-                    const int METER_CODE_INDEX = 2;
-                    const int FIRST_VALUE_INDEX = 3;
-                    const int VALUE_INDEX = 4;
-                    const int PERIOD_INDEX = 5;
-                    const int URBAN_CODE_INDEX = 6;
-                    const int BUILDING_CODE_INDEX = 7;
-                    // const int TYPE_CODE_INDEX = 7;
-
-                    var listNew = new List<CreateMeterMonthlyInput>();
-
-                    for (var row = 2; row <= rowCount; row++)
-                    {
-                        var meterMonthly = new CreateMeterMonthlyInput();
-                        string apartmentCode = worksheet.Cells[row, APARTMENT_CODE_INDEX].Text.Trim();
-                        string meterCode = worksheet.Cells[row, METER_CODE_INDEX].Text?.Trim();
-
-                        var valueCell = worksheet.Cells[row, VALUE_INDEX];
-                        var firstValueCell = worksheet.Cells[row, FIRST_VALUE_INDEX];
-                        var value = !string.IsNullOrWhiteSpace(valueCell.Text) ? (decimal?)decimal.Parse(valueCell.Text) : null;
-                        var firstValue = !string.IsNullOrWhiteSpace(firstValueCell.Text) ? (decimal?)decimal.Parse(firstValueCell.Text) : null;
-                        var periodString = worksheet.Cells[row, PERIOD_INDEX].Text?.Trim();
-                        var period = DateTime.ParseExact(periodString, "dd/MM/yyyy",
-                                  CultureInfo.InvariantCulture);
-
-                        string buildingCode = worksheet.Cells[row, BUILDING_CODE_INDEX].Text?.Trim();
-                        string urbanCode = worksheet.Cells[row, URBAN_CODE_INDEX].Text.Trim();
-
-                        // meterMonthly.TenantId = AbpSession.TenantId;
-                        meterMonthly.Period = period;
-                        meterMonthly.IsClosed = false;
-                        meterMonthly.Value = (int?)value;
-                        meterMonthly.FirstValue = (int?)firstValue;
-                        meterMonthly.ApartmentCode = apartmentCode;
+        // public async Task<object> ExportMeterMonthlyExcel(ExportMeterMonthlyDto input)
+        // {
+        //     try
+        //     {
+        //         List<long> buIds = UserManager.GetAccessibleBuildingOrUrbanIds();
+        //         var query = (from sm in _meterMonthlyRepository.GetAll()
+        //                      join meter in _meterRepository.GetAll() on sm.MeterId equals meter.Id into tb_mt
+        //                      from meter in tb_mt.DefaultIfEmpty()
+        //                      select new MeterMonthlyDto
+        //                      {
+        //                          Id = sm.Id,
+        //                          TenantId = sm.TenantId,
+        //                          Period = sm.Period,
+        //                          FirstValue = sm.FirstValue ?? (int?)_userBillRepo.GetAll().Where(u => u.ApartmentCode == meter.ApartmentCode).Select(u => u.IndexEndPeriod).FirstOrDefault() ?? 0,
+        //                          Value = sm.Value,
+        //                          MeterId = sm.MeterId,
+        //                          CreationTime = sm.CreationTime,
+        //                          CreatorUserId = sm.CreatorUserId ?? 0,
+        //                          MeterTypeId = meter.MeterTypeId,
+        //                          Name = meter.Name,
+        //                          ImageUrl = sm.ImageUrl,
+        //                          ApartmentCode = meter.ApartmentCode,
+        //                          BuildingId = meter.BuildingId,
+        //                          UrbanId = meter.UrbanId,
+        //                          BuildingName = _organizationUnitRepository.GetAll().Where(o => o.Id == meter.BuildingId)
+        //                              .Select(b => b.DisplayName).FirstOrDefault(),
+        //                          UrbanName = _organizationUnitRepository.GetAll().Where(o => o.Id == meter.UrbanId)
+        //                              .Select(b => b.DisplayName).FirstOrDefault(),
+        //                      })
+        //             .WhereByBuildingOrUrbanIf(!IsGranted(IOCPermissionNames.Data_Admin), buIds)
+        //             .WhereIf(input.Ids != null && input.Ids.Count > 0, x => input.Ids.Contains(x.Id))
+        //             .WhereIf(input.MeterTypeId.HasValue, x => x.MeterTypeId == input.MeterTypeId)
+        //             .AsQueryable();
+        //
+        //         var meterMonthly = await query.ToListAsync();
+        //         var result = _meterMonthlyExcelExport.ExportMeterMonthlyToExcel(meterMonthly);
+        //         return DataResult.ResultSuccess(result, "Export Success");
+        //     }
+        //     catch (Exception e)
+        //     {
+        //         var data = DataResult.ResultError(e.ToString(), "Exception !");
+        //         Logger.Fatal(e.Message);
+        //         throw;
+        //     }
+        // }
 
 
-                        var listBuilding = _organizationUnitRepository.GetAllList(x => x.Type == APP_ORGANIZATION_TYPE.BUILDING);
-                        var listUrban = _organizationUnitRepository.GetAllList(x => x.Type == APP_ORGANIZATION_TYPE.URBAN);
-                        if (!string.IsNullOrEmpty(apartmentCode))
-                        {
-                            var building = listBuilding.FirstOrDefault(x => x.ProjectCode == buildingCode);
-                            var urban = listUrban.FirstOrDefault(x => x.ProjectCode == urbanCode);
-                            if (urban != null)
-                            {
-                                var meter = (from m in _meterRepository.GetAll()
-                                             join mt in _meterTypeRepository.GetAll() on m.MeterTypeId equals mt.Id into tb_mt
-                                             from mt in tb_mt.DefaultIfEmpty()
-                                             where m.ApartmentCode == apartmentCode
-                                                   && m.UrbanId == urban.ParentId
-                                                   && m.BuildingId == building.ParentId
-                                                   && m.Code == meterCode
-                                                   && mt != null
-                                             select m).FirstOrDefault();
-
-
-
-                                if (meter != null)
-                                {
-                                    meterMonthly.MeterId = meter.Id;
-
-                                }
-                            }
-
-
-                        }
-                        // if (firstValue == 0 && meterMonthly.Period != null)
-                        // {
-                        //     var pre_period = meterMonthly.Period.AddMonths(-1);
-                        //     var pre_bill = _userBillRepo.FirstOrDefault(x =>
-                        //            x.ApartmentCode == apartmentCode && x.Period.Value.Year == pre_period.Year &&
-                        //            x.Period.Value.Month == pre_period.Month);
-
-                        //     meterMonthly.FirstValue = meterMonthly.FirstValue > 0 ? meterMonthly.FirstValue : (int)(pre_bill?.IndexEndPeriod ?? 0);
-                        // }
-
-
-                        listNew.Add(meterMonthly);
-                    }
-
-                    await CreateListMeterMonthlyAsync(listNew);
-
-                    // Xóa tệp đã tạo
-                    File.Delete(filePath);
-
-                    return DataResult.ResultSuccess(listNew, "Upload success");
-                }
-            }
-            catch (Exception ex)
-            {
-                var data = DataResult.ResultError(ex.Message, "Error");
-                Logger.Fatal(ex.Message, ex);
-                throw;
-            }
-        }
+        // public async Task<object> ImportMeterMonthlyExcel([FromForm] ImportMeterMonthlyInput input)
+        // {
+        //     try
+        //     {
+        //         using (CurrentUnitOfWork.SetTenantId(AbpSession.TenantId))
+        //         {
+        //             IFormFile file = input.File;
+        //             string fileName = file.FileName;
+        //             string fileExt = Path.GetExtension(fileName);
+        //             if (fileExt != ".xlsx" && fileExt != ".xls")
+        //             {
+        //                 return DataResult.ResultError("File not supported", "Error");
+        //             }
+        //
+        //             string filePath = Path.GetRandomFileName() + fileExt;
+        //
+        //             using (FileStream stream = File.Create(filePath))
+        //             {
+        //                 await file.CopyToAsync(stream);
+        //                 stream.Close();
+        //             }
+        //
+        //             var package = new ExcelPackage(new FileInfo(filePath));
+        //             var worksheet = package.Workbook.Worksheets.First();
+        //             int rowCount = worksheet.Dimension.End.Row;
+        //
+        //             const int APARTMENT_CODE_INDEX = 1;
+        //             const int METER_CODE_INDEX = 2;
+        //             const int FIRST_VALUE_INDEX = 3;
+        //             const int VALUE_INDEX = 4;
+        //             const int PERIOD_INDEX = 5;
+        //             const int URBAN_CODE_INDEX = 6;
+        //             const int BUILDING_CODE_INDEX = 7;
+        //             // const int TYPE_CODE_INDEX = 7;
+        //
+        //             var listNew = new List<CreateMeterMonthlyInput>();
+        //
+        //             for (var row = 2; row <= rowCount; row++)
+        //             {
+        //                 var meterMonthly = new CreateMeterMonthlyInput();
+        //                 string apartmentCode = worksheet.Cells[row, APARTMENT_CODE_INDEX].Text.Trim();
+        //                 string meterCode = worksheet.Cells[row, METER_CODE_INDEX].Text?.Trim();
+        //
+        //                 var valueCell = worksheet.Cells[row, VALUE_INDEX];
+        //                 var firstValueCell = worksheet.Cells[row, FIRST_VALUE_INDEX];
+        //                 var value = !string.IsNullOrWhiteSpace(valueCell.Text) ? (decimal?)decimal.Parse(valueCell.Text) : null;
+        //                 var firstValue = !string.IsNullOrWhiteSpace(firstValueCell.Text) ? (decimal?)decimal.Parse(firstValueCell.Text) : null;
+        //                 var periodString = worksheet.Cells[row, PERIOD_INDEX].Text?.Trim();
+        //                 var period = DateTime.ParseExact(periodString, "dd/MM/yyyy",
+        //                           CultureInfo.InvariantCulture);
+        //
+        //                 string buildingCode = worksheet.Cells[row, BUILDING_CODE_INDEX].Text?.Trim();
+        //                 string urbanCode = worksheet.Cells[row, URBAN_CODE_INDEX].Text.Trim();
+        //
+        //                 // meterMonthly.TenantId = AbpSession.TenantId;
+        //                 meterMonthly.Period = period;
+        //                 meterMonthly.IsClosed = false;
+        //                 meterMonthly.Value = (int?)value;
+        //                 meterMonthly.FirstValue = (int?)firstValue;
+        //                 meterMonthly.ApartmentCode = apartmentCode;
+        //
+        //
+        //                 var listBuilding = _organizationUnitRepository.GetAllList(x => x.Type == APP_ORGANIZATION_TYPE.BUILDING);
+        //                 var listUrban = _organizationUnitRepository.GetAllList(x => x.Type == APP_ORGANIZATION_TYPE.URBAN);
+        //                 if (!string.IsNullOrEmpty(apartmentCode))
+        //                 {
+        //                     var building = listBuilding.FirstOrDefault(x => x.ProjectCode == buildingCode);
+        //                     var urban = listUrban.FirstOrDefault(x => x.ProjectCode == urbanCode);
+        //                     if (urban != null)
+        //                     {
+        //                         var meter = (from m in _meterRepository.GetAll()
+        //                                      join mt in _meterTypeRepository.GetAll() on m.MeterTypeId equals mt.Id into tb_mt
+        //                                      from mt in tb_mt.DefaultIfEmpty()
+        //                                      where m.ApartmentCode == apartmentCode
+        //                                            && m.UrbanId == urban.ParentId
+        //                                            && m.BuildingId == building.ParentId
+        //                                            && m.Code == meterCode
+        //                                            && mt != null
+        //                                      select m).FirstOrDefault();
+        //
+        //
+        //
+        //                         if (meter != null)
+        //                         {
+        //                             meterMonthly.MeterId = meter.Id;
+        //
+        //                         }
+        //                     }
+        //
+        //
+        //                 }
+        //                 // if (firstValue == 0 && meterMonthly.Period != null)
+        //                 // {
+        //                 //     var pre_period = meterMonthly.Period.AddMonths(-1);
+        //                 //     var pre_bill = _userBillRepo.FirstOrDefault(x =>
+        //                 //            x.ApartmentCode == apartmentCode && x.Period.Value.Year == pre_period.Year &&
+        //                 //            x.Period.Value.Month == pre_period.Month);
+        //
+        //                 //     meterMonthly.FirstValue = meterMonthly.FirstValue > 0 ? meterMonthly.FirstValue : (int)(pre_bill?.IndexEndPeriod ?? 0);
+        //                 // }
+        //
+        //
+        //                 listNew.Add(meterMonthly);
+        //             }
+        //
+        //             await CreateListMeterMonthlyAsync(listNew);
+        //
+        //             // Xóa tệp đã tạo
+        //             File.Delete(filePath);
+        //
+        //             return DataResult.ResultSuccess(listNew, "Upload success");
+        //         }
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         var data = DataResult.ResultError(ex.Message, "Error");
+        //         Logger.Fatal(ex.Message, ex);
+        //         throw;
+        //     }
+        // }
 
         private async Task CreateListMeterMonthlyAsync(List<CreateMeterMonthlyInput> input)
         {

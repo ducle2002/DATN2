@@ -27,7 +27,7 @@ namespace Yootek.Services.Dto
         public string? ProvinceCode { get; set; }
         public string? DistrictCode { get; set; }
         public string? WardCode { get; set; }
-        public List<CitizenRole> Citizens { get; set; }
+        // public List<CitizenRole> Citizens { get; set; }
         public int? CurrentCitizenCount { get; set; }
     }
 

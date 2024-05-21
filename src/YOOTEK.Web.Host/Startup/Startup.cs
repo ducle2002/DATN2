@@ -19,8 +19,6 @@ using Yootek.Authorization;
 using Yootek.Configuration;
 using Yootek.Identity;
 using Yootek.Notifications;
-using Yootek.Services.Notifications;
-using Yootek.Web.Host.Chat;
 using ImaxFileUploaderServer.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -98,7 +96,6 @@ namespace Yootek.Web.Host.Startup
                 )
             );
 
-            services.AddSingleton<IAppNotifyBusiness, AppNotifyBusiness>();
             services.AddHttpClient();
             services.AddHttpClient<FcmSender>();
             services.AddHttpClient<ApnSender>();
@@ -224,7 +221,6 @@ namespace Yootek.Web.Host.Startup
             app.UseEndpoints(endpoints =>
             {
                 // endpoints.MapHub<BusinessHub>("/business");
-                endpoints.MapHub<ChatHub>("/messager");
                 endpoints.MapHub<AbpCommonHub>("/signalr");
                 endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapControllerRoute("defaultWithArea", "{area}/{controller=Home}/{action=Index}/{id?}");
