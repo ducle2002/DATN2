@@ -11,29 +11,22 @@ using Abp.Configuration;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Runtime.Caching;
-using Abp.Runtime.Session;
 using Abp.UI;
 using Abp.Zero.Configuration;
-using Yootek.Account.Cache;
 using Yootek.Authorization.Accounts.Dto;
 using Yootek.Authorization.Users;
-using Yootek.Common;
-using Yootek.EntityDb;
 using Yootek.MultiTenancy;
-using Yootek.Net.Sms;
-using Yootek.Notifications;
-using Yootek.Organizations;
-using Yootek.Url;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.IdentityModel.Tokens;
 using Abp.Json;
+using Yootek.Net.Sms;
+// using Yootek.Url;
 
 namespace Yootek.Authorization.Accounts
 {
     [Audited]
     public class AccountAppService : YootekAppServiceBase, IAccountAppService
     {
-        public IAppUrlService AppUrlService { get; set; }
+        // public IAppUrlService AppUrlService { get; set; }
 
         // from: http://regexlib.com/REDetails.aspx?regexp_id=1923
         public const string PasswordRegex =
@@ -41,38 +34,38 @@ namespace Yootek.Authorization.Accounts
 
         private readonly UserRegistrationManager _userRegistrationManager;
         private readonly UserManager _userManager;
-        private readonly IAppNotifier _appNotifier;
+        // private readonly IAppNotifier _appNotifier;
         private readonly IRepository<Tenant, int> _tenantRepos;
 
-        private readonly IUserEmailer _userEmailer;
+        // private readonly IUserEmailer _userEmailer;
 
         //  private readonly IRepository<TenantProject, long> _tenantProjectRepos;
-        private readonly IRepository<AppOrganizationUnit, long> _tenantProjectRepos;
-        private readonly ICacheManager _cacheManager;
+        // private readonly IRepository<AppOrganizationUnit, long> _tenantProjectRepos;
+        // private readonly ICacheManager _cacheManager;
 
-        private readonly ISmsSender _smsSender;
+        // private readonly ISmsSender _smsSender;
 
         // private readonly IUnitOfWordManager
         public AccountAppService(
             UserManager userManager,
             IRepository<Tenant, int> tenantRepos,
-            IAppNotifier appNotifier,
+            // IAppNotifier appNotifier,
             UserRegistrationManager userRegistrationManager,
-            IUserEmailer userEmailer,
-            IRepository<AppOrganizationUnit, long> tenantProjectRepos,
-            ICacheManager cacheManager,
-            ISmsSender smsSender
+            // IUserEmailer userEmailer,
+            // IRepository<AppOrganizationUnit, long> tenantProjectRepos,
+            ICacheManager cacheManager
+            // ISmsSender smsSender
         )
         {
-            _cacheManager = cacheManager;
+            // _cacheManager = cacheManager;
             _userRegistrationManager = userRegistrationManager;
             _userManager = userManager;
-            _appNotifier = appNotifier;
+            // _appNotifier = appNotifier;
             _tenantRepos = tenantRepos;
-            _userEmailer = userEmailer;
-            _tenantProjectRepos = tenantProjectRepos;
-            AppUrlService = NullAppUrlService.Instance;
-            _smsSender = smsSender;
+            // _userEmailer = userEmailer;
+            // _tenantProjectRepos = tenantProjectRepos;
+            // AppUrlService = NullAppUrlService.Instance;
+            // _smsSender = smsSender;
         }
 
         [AllowAnonymous]
@@ -95,27 +88,27 @@ namespace Yootek.Authorization.Accounts
             }
         }
 
-        public async Task<object> GetAllTenantProjectName()
-        {
-            try
-            {
-                var tenants = (from tn in _tenantProjectRepos.GetAll()
-                    where tn.Type == APP_ORGANIZATION_TYPE.URBAN
-                    select new
-                    {
-                        Id = tn.Id,
-                        Name = tn.DisplayName,
-                        ProjectCode = tn.ProjectCode,
-                        OrganizationUnitId = tn.ParentId
-                    }).ToList();
-
-                return tenants;
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
+        // public async Task<object> GetAllTenantProjectName()
+        // {
+        //     try
+        //     {
+        //         var tenants = (from tn in _tenantProjectRepos.GetAll()
+        //             where tn.Type == APP_ORGANIZATION_TYPE.URBAN
+        //             select new
+        //             {
+        //                 Id = tn.Id,
+        //                 Name = tn.DisplayName,
+        //                 ProjectCode = tn.ProjectCode,
+        //                 OrganizationUnitId = tn.ParentId
+        //             }).ToList();
+        //
+        //         return tenants;
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         throw;
+        //     }
+        // }
 
         public async Task<IsTenantAvailableOutput> IsTenantAvailable(IsTenantAvailableInput input)
         {
@@ -172,7 +165,7 @@ namespace Yootek.Authorization.Accounts
                 await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement
                     .IsEmailConfirmationRequiredForLogin);
 
-            await _appNotifier.WelcomeToTheApplicationAsync(user);   
+            // await _appNotifier.WelcomeToTheApplicationAsync(user);   
             return new RegisterOutput
             {
                 CanLogin = user.IsActive && (user.IsEmailConfirmed || !isEmailConfirmationRequiredForLogin),
@@ -180,32 +173,32 @@ namespace Yootek.Authorization.Accounts
             };
         }
 
-        public async Task<object> SendPasswordResetCode(SendPasswordResetCodeInput input)
-        {
-            try
-            {
-                using (CurrentUnitOfWork.SetTenantId(input.TenantId))
-                {
-                    var user = await UserManager.FindByEmailAsync(input.EmailAddress);
-                    if (user == null)
-                    {
-                        return null;
-                    }
-
-                    user.SetNewPasswordResetCode();
-                    await _userEmailer.SendPasswordResetLinkAsync(user);
-                    return new
-                    {
-                        UserId = user.Id
-                    };
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Fatal("pass + Email: " + ex.ToJsonString());
-                throw;
-            }
-        }
+        // public async Task<object> SendPasswordResetCode(SendPasswordResetCodeInput input)
+        // {
+        //     try
+        //     {
+        //         using (CurrentUnitOfWork.SetTenantId(input.TenantId))
+        //         {
+        //             var user = await UserManager.FindByEmailAsync(input.EmailAddress);
+        //             if (user == null)
+        //             {
+        //                 return null;
+        //             }
+        //
+        //             user.SetNewPasswordResetCode();
+        //             await _userEmailer.SendPasswordResetLinkAsync(user);
+        //             return new
+        //             {
+        //                 UserId = user.Id
+        //             };
+        //         }
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         Logger.Fatal("pass + Email: " + ex.ToJsonString());
+        //         throw;
+        //     }
+        // }
 
         public async Task<ResetPasswordOutput> ResetPassword(ResetPasswordInput input)
         {
@@ -264,75 +257,75 @@ namespace Yootek.Authorization.Accounts
             CurrentUnitOfWork.SaveChanges();
         }
 
-        public async Task SendEmailActivationLink(SendEmailActivationLinkInput input)
-        {
-            var user = await UserManager.FindByEmailAsync(input.EmailAddress);
-            if (user == null)
-            {
-                return;
-            }
-
-            user.SetNewEmailConfirmationCode();
-            await _userEmailer.SendEmailActivationLinkAsync(
-                user,
-                AppUrlService.CreateEmailActivationUrlFormat(AbpSession.TenantId)
-            );
-        }
-
-        public async Task GetActivateEmail(ActivateEmailInput input)
-        {
-            var user = await UserManager.FindByIdAsync(input.UserId.ToString());
-            if (user != null && user.IsEmailConfirmed)
-            {
-                return;
-            }
-
-            if (user == null || user.EmailConfirmationCode.IsNullOrEmpty() ||
-                user.EmailConfirmationCode != input.ConfirmationCode)
-            {
-                throw new UserFriendlyException(L("InvalidEmailConfirmationCode"),
-                    L("InvalidEmailConfirmationCode_Detail"));
-            }
-
-            user.IsEmailConfirmed = true;
-            user.EmailConfirmationCode = null;
-
-            await UserManager.UpdateAsync(user);
-        }
-
-        public async Task SendVerificationSms(SendVerificationSmsInputDto input)
-        {
-            var code = RandomHelper.GetRandom(100000, 999999).ToString();
-            var cacheKey = AbpSession.ToUserIdentifier().ToString();
-            var cacheItem = new SmsVerificationCodeCacheItem { Code = code };
-
-            await _cacheManager.GetSmsVerificationCodeCache().SetAsync(
-                cacheKey,
-                cacheItem
-            );
-
-            await _smsSender.SendAsync(input.PhoneNumber, L("SmsVerificationMessage", code));
-        }
-
-        public async Task VerifySmsCode(VerifySmsCodeInputDto input)
-        {
-            var cacheKey = AbpSession.ToUserIdentifier().ToString();
-            var cash = await _cacheManager.GetSmsVerificationCodeCache().GetOrDefaultAsync(cacheKey);
-
-            if (cash == null)
-            {
-                throw new Exception("Phone number confirmation code is not found in cache !");
-            }
-
-            if (input.Code != cash.Code)
-            {
-                throw new UserFriendlyException(L("WrongSmsVerificationCode"));
-            }
-
-            var user = await UserManager.GetUserAsync(AbpSession.ToUserIdentifier());
-            user.IsPhoneNumberConfirmed = true;
-            user.PhoneNumber = input.PhoneNumber;
-            await UserManager.UpdateAsync(user);
-        }
+    //     public async Task SendEmailActivationLink(SendEmailActivationLinkInput input)
+    //     {
+    //         var user = await UserManager.FindByEmailAsync(input.EmailAddress);
+    //         if (user == null)
+    //         {
+    //             return;
+    //         }
+    //
+    //         user.SetNewEmailConfirmationCode();
+    //         await _userEmailer.SendEmailActivationLinkAsync(
+    //             user,
+    //             AppUrlService.CreateEmailActivationUrlFormat(AbpSession.TenantId)
+    //         );
+    //     }
+    //
+    //     public async Task GetActivateEmail(ActivateEmailInput input)
+    //     {
+    //         var user = await UserManager.FindByIdAsync(input.UserId.ToString());
+    //         if (user != null && user.IsEmailConfirmed)
+    //         {
+    //             return;
+    //         }
+    //
+    //         if (user == null || user.EmailConfirmationCode.IsNullOrEmpty() ||
+    //             user.EmailConfirmationCode != input.ConfirmationCode)
+    //         {
+    //             throw new UserFriendlyException(L("InvalidEmailConfirmationCode"),
+    //                 L("InvalidEmailConfirmationCode_Detail"));
+    //         }
+    //
+    //         user.IsEmailConfirmed = true;
+    //         user.EmailConfirmationCode = null;
+    //
+    //         await UserManager.UpdateAsync(user);
+    //     }
+    //
+    //     public async Task SendVerificationSms(SendVerificationSmsInputDto input)
+    //     {
+    //         var code = RandomHelper.GetRandom(100000, 999999).ToString();
+    //         var cacheKey = AbpSession.ToUserIdentifier().ToString();
+    //         var cacheItem = new SmsVerificationCodeCacheItem { Code = code };
+    //
+    //         await _cacheManager.GetSmsVerificationCodeCache().SetAsync(
+    //             cacheKey,
+    //             cacheItem
+    //         );
+    //
+    //         await _smsSender.SendAsync(input.PhoneNumber, L("SmsVerificationMessage", code));
+    //     }
+    //
+    //     public async Task VerifySmsCode(VerifySmsCodeInputDto input)
+    //     {
+    //         var cacheKey = AbpSession.ToUserIdentifier().ToString();
+    //         var cash = await _cacheManager.GetSmsVerificationCodeCache().GetOrDefaultAsync(cacheKey);
+    //
+    //         if (cash == null)
+    //         {
+    //             throw new Exception("Phone number confirmation code is not found in cache !");
+    //         }
+    //
+    //         if (input.Code != cash.Code)
+    //         {
+    //             throw new UserFriendlyException(L("WrongSmsVerificationCode"));
+    //         }
+    //
+    //         var user = await UserManager.GetUserAsync(AbpSession.ToUserIdentifier());
+    //         user.IsPhoneNumberConfirmed = true;
+    //         user.PhoneNumber = input.PhoneNumber;
+    //         await UserManager.UpdateAsync(user);
+    //     }
     }
 }
