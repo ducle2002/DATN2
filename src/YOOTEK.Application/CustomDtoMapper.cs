@@ -39,15 +39,7 @@ namespace Yootek
             //Permission
             mapper.CreateMap<Permission, FlatPermissionDto>();
             mapper.CreateMap<Permission, FlatPermissionWithLevelDto>();
-
-            //UserBill
-            mapper.CreateMap<CreateOrUpdateBillConfigInputDto, BillConfig>();
-            mapper.CreateMap<CreateOrUpdateUserBillInputDto, UserBill>();
-
-            //Asset
-
-            // Apartment
-            mapper.CreateMap<CreateApartmentInput, Apartment>();
+            
            
             // MeterType
             mapper.CreateMap<CreateMeterTypeInput, MeterType>()

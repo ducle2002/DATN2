@@ -9,13 +9,6 @@ using Castle.Facilities.Logging;
 using CorePush.Apple;
 using CorePush.Google;
 using Yootek.App.ServiceHttpClient;
-using Yootek.Application.Protos.Business.Bookings;
-using Yootek.Application.Protos.Business.Items;
-using Yootek.Application.Protos.Business.Orders;
-using Yootek.Application.Protos.Business.Providers;
-using Yootek.Application.Protos.Business.Rates;
-using Yootek.Application.Protos.Business.Vouchers;
-using Yootek.Authorization;
 using Yootek.Configuration;
 using Yootek.Identity;
 using Yootek.Notifications;
@@ -135,33 +128,7 @@ namespace Yootek.Web.Host.Startup
                 options.SignIn.RequireConfirmedEmail = false;
                 options.User.RequireUniqueEmail = false;
             });
-
-            // Business 
-            services.AddGrpcClient<ItemProtoGrpc.ItemProtoGrpcClient>(o =>
-            {
-                o.Address = new Uri(_appConfiguration["ServiceAddress:ItemProtoGrpc"]);
-            });
-            services.AddGrpcClient<ProviderProtoGrpc.ProviderProtoGrpcClient>(o =>
-            {
-                o.Address = new Uri(_appConfiguration["ServiceAddress:ProviderProtoGrpc"]);
-            });
-            services.AddGrpcClient<OrderProtoGrpc.OrderProtoGrpcClient>(o =>
-            {
-                o.Address = new Uri(_appConfiguration["ServiceAddress:OrderProtoGrpc"]);
-            });
-            services.AddGrpcClient<RateProtoGrpc.RateProtoGrpcClient>(o =>
-            {
-                o.Address = new Uri(_appConfiguration["ServiceAddress:RateProtoGrpc"]);
-            });
-            services.AddGrpcClient<VoucherProtoGrpc.VoucherProtoGrpcClient>(o =>
-            {
-                o.Address = new Uri(_appConfiguration["ServiceAddress:VoucherProtoGrpc"]);
-            });
-            services.AddGrpcClient<BookingProtoGrpc.BookingProtoGrpcClient>(o =>
-            {
-                o.Address = new Uri(_appConfiguration["ServiceAddress:BookingProtoGrpc"]);
-            });
-
+            
             services.AddCors(
                options => options.AddPolicy(
                    _defaultCorsPolicyName,

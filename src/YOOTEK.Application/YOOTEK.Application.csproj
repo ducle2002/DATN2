@@ -28,19 +28,6 @@
     <PackageReference Include="QRCoder-ImageSharp" Version="0.10.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
   </ItemGroup>
-
-	<ItemGroup>
-		<Protobuf Include="Protos\Business\item_attribute.proto" GrpcServices="Client" />
-		<Protobuf Include="Protos\Business\item_cart.proto" GrpcServices="None" />
-		<Protobuf Include="Protos\Business\item_model.proto" GrpcServices="None" />
-		<Protobuf Include="Protos\Business\item.proto" GrpcServices="Client" />
-		<Protobuf Include="Protos\Business\category.proto" GrpcServices="Client" />
-		<Protobuf Include="Protos\Business\provider.proto" GrpcServices="Client" />
-		<Protobuf Include="Protos\Business\order.proto" GrpcServices="Client" />
-		<Protobuf Include="Protos\Business\rate.proto" GrpcServices="Client" />
-		<Protobuf Include="Protos\Business\booking.proto" GrpcServices="Client" />
-		<Protobuf Include="Protos\Business\voucher.proto" GrpcServices="Client" />
-	</ItemGroup>
 	
   <ItemGroup>
     <ProjectReference Include="..\YOOTEK.Core\YOOTEK.Core.csproj" />
