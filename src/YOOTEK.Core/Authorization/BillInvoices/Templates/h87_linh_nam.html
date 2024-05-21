@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phiếu Thu</title>
+   <style>
+ .header {
+        display: flex;
+        justify-content: space-between;
+    }
+    .info {
+        flex: 1;
+    }
+    .other-content {
+        flex: 1;
+        text-align: right;
+    }
+.container {
+          margin: auto;
+          width: 800px;
+       }
+
+   </style>
+</head>
+<body>
+    <div class="container" >
+        <div class="header">
+            <div class="info">
+                <div>
+                    <p>Đơn vị: <span style="
+                        margin-left: 7px;
+                    "> <strong>Công ty CP vận hành QL tòa nhà Tân Phong</strong></span></p>
+                    <p >Bộ phận:  <span style="
+                        margin-left: 8px;
+                    "><strong>Ban quản lý tòa nhà New Horizon City</strong></span></p>
+                </div>            
+            </div>
+            <div class="other-content">
+                <p style="
+                margin-right: 174px;
+            ">Mẫu số 01-TT</p>
+                <p>(Ban hành theo Thông tư số 15/2006/QĐ-</p>
+                <p>BTC ngày 20/03/2006 của Bộ Tài chính)</p>
+            </div>
+        </div>
+        
+        
+        <div class="content">
+            <h3 style="
+            margin-left: 41%;
+            color: red;
+        ">PHIẾU THU</h3>
+            <p style="
+            margin-left: 36%;
+        "><strong>Ngày {DAY_NOW} tháng {MONTH_NOW} năm {YEAR_NOW}</strong></p>
+            <div >
+                <p style="
+                margin-left: 45%;
+            "><strong>Liên 2.</strong> <span><strong style="
+    margin-left: 139px;
+">Số phiếu: PT1211-N03</strong></span></p>
+                <p style="
+                margin-left: 70%;
+            ">Nợ:</p>
+                <p style="
+                margin-left: 70%;
+            ">Có:</p>
+            </div>
+            <div class="info">
+                <p>Họ và tên người nộp tiền: <strong style="
+                    margin-left: 101px;
+                ">Phạm Thị Hường (Liên hệ khi cần)</strong></p>
+                <p>Địa chỉ: <strong style="
+                    margin-left: 182px;
+                ">Căn hộ {APARTMENT_CODE} tòa nhà New Horizon City</strong></p>
+                <p>Lý do nộp: <strong style="
+                    margin-left: 130px;
+                ">TT phí DV {MONTH_NOW}/{YEAR_NOW}, Phí xe {MONTH_NOW}/{YEAR_NOW}, Phí nước {MONTH_NOW}/{YEAR_NOW}</strong></p>
+                <p>Số tiền: <strong style="
+                    margin-left: 286px;
+                ">{COST_TOTAL} vnđ</strong></p>
+                <p>Số tiền bằng chữ: <strong style="
+                    margin-left: 61px;
+                ">{COST_TOTAL_TEXT}</strong></p>
+                <p>Chứng từ kèm theo: <span style="
+                    margin-left: 93px;
+                ">Kèm theo chứng từ gốc</span></p>
+                <div>
+                  <span><strong style="
+                    margin-left: 20px;
+                ">Giám đốc</strong> <strong style="
+    margin-left: 20px;
+">Kế toán trưởng</strong> <strong style="
+    margin-left: 20px;
+">Người lập phiếu</strong> <strong style="
+    margin-left: 20px;
+">Thủ quỹ</strong> <strong style="
+    margin-left: 80px;
+">Ngày {DAY_NOW} tháng {MONTH_NOW} năm {YEAR_NOW}</strong></span> 
+                   <span> <strong style="
+                    margin-left: 74%;
+                ">Người nộp tiền</strong></span>
+                <p><strong style="
+                    margin-left: 250px;
+                ">Vũ Thị Thu Hường</strong></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

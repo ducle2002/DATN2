@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông Báo Thanh Toán</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f2f2f2;
+        }
+        
+        .container {
+            max-width: 800px;
+            background-color: #fff;
+            border-radius: 5px;
+            font-size: 13px;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+        
+        header {
+            text-align: center;
+        }
+        
+        header h1 {
+            color: #333;
+        }
+        
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        
+        th, td {
+            text-align: left;
+        }
+        
+        th {
+            background-color: #f2f2f2;
+        }
+        
+        footer {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h2 style="
+            margin-left: -3px;
+        ">CÔNG TY TNHH ANA SERVICES</h2>
+            <p style="
+            margin-left: -18px; margin-top: -13px;
+        ">Ban QLVH Cụm chung cư Văn phòng Quốc hội</p>
+        </header>
+        <section class="announcement">
+            <h2 style="
+            margin-left: 245px;  margin-top: -10px;
+        ">THÔNG BÁO THANH TOÁN</h2>
+            <p style="
+            margin-left: 288px;  margin-top: -15px;
+        ">Ngày {DAY_NOW} tháng {MONTH_NOW} năm {YEAR_NOW}</p>
+            <p><strong>Ông/ Bà: {CUSTOMER_NAME}</strong></p>
+            <p><strong>Chủ căn hộ: {APARTMENT_CODE}</strong></p>
+            <h3>I/ Thu tiền nước tháng {MONTH_NOW} năm {YEAR_NOW}</h3>
+            <table>
+                <thead>
+                  <tr>
+                    <th>Nội dung</th>
+                    <th>Chỉ Số cũ</th>
+                    <th>Chỉ Số mới</th>
+                    <th>Tổng tiêu thụ</th>
+                    <th></th>
+                    <th>Chỉ số tiêu thụ</th>
+                    <th>Đơn giá</th>
+                    <th>Thành tiền</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td rowspan="5">Nước sinh hoạt</td>
+                    <td rowspan="5">{HEAD_INDEX_W}</td>
+                    <td rowspan="5">{END_INDEX_W}</td>
+                    <td rowspan="5">{TOTAL_INDEX_W}</td>
+                  </tr>
+                  <tr>
+                    <td>Bậc 1: từ 0 - 10 m3</td>
+                    <td>{W_INDEX1}</td>
+                    <td>{W_PRICE1}</td>
+                    <td>{W_AMOUNT1}</td>
+                  </tr>
+                  <tr>
+                    <td>Bậc 2: từ 11 - 20 m3</td>
+                    <td>{W_INDEX2}</td>
+                    <td>{W_PRICE2}</td>
+                    <td>{W_AMOUNT2}</td>
+                  </tr>
+                  <tr>
+                    <td>Bậc 3: từ 21 - 30 m3</td>
+                    <td>{W_INDEX3}</td>
+                    <td>{W_PRICE3}</td>
+                    <td>{W_AMOUNT3}</td>
+                  </tr>
+                  <tr>
+                    <td>Bậc 4: từ 31 m3 trở lên</td>
+                    <td>{W_INDEX4}</td>
+                    <td>{W_PRICE4}</td>
+                    <td>{W_AMOUNT4}</td>
+                  </tr>
+                  <tr>
+                    <td colspan="7" style="text-align:right;"><strong>Tổng tiền nước:</strong></td>
+                    <td>{W_MONEY}</td>
+                  </tr>
+                </tbody>
+              </table>
+              
+            
+              <table>
+                <thead>
+                  <tr>
+                    <th style="width: 50%;">II/ Thu tiền trông giữ xe tháng 03 năm 2024</th>
+                    <th>Số lượng</th>
+                    <th>Phí trông xe</th>
+                    <th>Tổng tiền</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {LIST_VEHICLE_TEMP}
+                  <tr>
+                    <td colspan="3" style="text-align:right;"><strong>Tổng tiền xe:</strong></td>
+                    <td>{P_MONEY}</td>
+                  </tr>
+                </tbody>
+              </table>
+              <table>
+                <thead>
+                  <tr>
+                  <th> III/ Thu tiền phí Quản lý vận hành</th>
+                    <th>Diện tích</th>
+                    <th>Đơn Giá</th>
+                    <th>Thành tiền</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Phí vận hành tháng {MONTH_NOW}/{YEAR_NOW}</td>
+                    <td>{ACREAGE_APARTMENT}</td>
+                    <td>{UNIT_PRICE_MANAGEMENT}</td>
+                    <td>{COST_MANAGEMENT_UNPAID}</td>
+                  </tr>
+                </tbody>
+              </table>
+              <table>
+                <thead>
+                  <tr>
+                    <th>IV/ Tổng công nợ (nước, xe, phí QLVH)</th>
+                    <th>{DEBT}</th>
+                  </tr>
+                </thead>
+                <thead>
+                    <tr>
+                      <th style="width: 50%; background-color: #f2f2f2; padding: 8px; text-align: left; border-bottom: 1px solid #ddd;">V/ Tổng tiền đã thu trước tháng {MONTH_NOW}/{YEAR_NOW}</th>
+                      <th style="width: 50%; background-color: #f2f2f2; padding: 8px; text-align: left; border-bottom: 1px solid #ddd;">{COST_PRE_PAYMENT}</th>
+                    </tr>
+                  </thead>
+                <tbody>
+                  <tr>
+                    <td style="width: 50%; background-color: #f2f2f2; padding: 8px; text-align: left; border-bottom: 1px solid #ddd;">1. Nước</td>
+                    <td style="width: 50%; background-color: #f2f2f2; padding: 8px; text-align: left; border-bottom: 1px solid #ddd;">{COST_WATER_PRE_PAYMENT}</td>
+                  </tr>
+                  <tr>
+                    <td style="width: 50%; background-color: #f2f2f2; padding: 8px; text-align: left; border-bottom: 1px solid #ddd;">2. Tiền xe</td>
+                    <td style="width: 50%; background-color: #f2f2f2; padding: 8px; text-align: left; border-bottom: 1px solid #ddd;">{COST_CAR_PRE_PAYMENT}</td>
+                  </tr>
+                  <tr>
+                    <td style="width: 50%; background-color: #f2f2f2; padding: 8px; text-align: left; border-bottom: 1px solid #ddd;">3. Tiền Phí QLVH</td>
+                    <td style="width: 50%; background-color: #f2f2f2; padding: 8px; text-align: left; border-bottom: 1px solid #ddd;">{COST_PRE_MANAGEMENT}</td>
+                  </tr>
+                </tbody>
+              </table>
+              <table>
+                <thead>
+                  <tr>
+                    <th style="width: 50%; background-color: #f2f2f2; padding: 8px; text-align: left; border-bottom: 1px solid #ddd;">Tổng phải thanh toán (I)+(II)+(III)+(IV)-(V)</th>
+                    <th style="width: 50%; background-color: #f2f2f2; padding: 8px; text-align: left; border-bottom: 1px solid #ddd;">{COST_FINAL}</th>
+                  </tr>
+                </thead>
+              </table>
+        </section>
+        <div>
+          <p><strong>Bằng chữ: {TOTAL_MONEY_TEXT}</strong></p>
+          <p style="
+          margin-top: -13px;
+      "><strong>Nội dung</strong>: Phí dịch vụ, tiền gửi xe tháng {MONTH_NOW}/{YEAR_NOW} và tiền nước tháng{MONTH_NOW_1}/{YEAR_NOW} </p>
+      <p style="
+      margin-top: -13px;
+  ">02 xe ô tô 30K-19300; 29A-45635</p>
+          <p style="
+          margin-top: -13px;
+      "><strong>Phương thức thanh toán:</strong></p>
+          <p style="
+          margin-top: -13px;
+      "><strong>1. Chuyển khoản:</strong></p>
+          <p style="
+          margin-top: -13px;
+      ">Tên tài khoản: <strong>Công ty TNHH Ana Services</strong></p>
+      <p style="
+      margin-top: -13px;
+  ">Số tài khoản: <strong>8680018545</strong></p>
+          <p style="
+          margin-top: -13px;
+      ">Ngân hàng: <strong>Ngân hàng TMCP Đầu tư & phát triển Việt Nam (BIDV) - Chi nhánh Mỹ Đình</strong></p>
+          <p style="
+          margin-top: -13px;
+      "><strong>Nội dung chuyển tiền: Căn hộ … Toà … chuyển tiền DV, xe, nước tháng ….. /24</strong></p>
+          <p style="
+          margin-top: -13px;
+      "><strong>2. Tiền mặt:</strong></p>
+          <p style="
+          margin-top: -13px;
+      ">Từ <strong>08h00 đến 17h00 </strong>từ <strong>Thứ hai </strong>đến<strong> Thứ bảy </strong>tại Ban quản lý <strong>tầng 1 tòa nhà CT2B</strong></p>
+        </div>
+        <footer style="
+        font-size: 13px;
+    ">
+            <p style="
+            margin-top: -13px;
+        " >Mọi thay đổi thông tin <strong>tăng giảm phương tiện</strong>, đề nghị Quý cư dân thông báo trước cho Ban Quản lý vào <strong>ngày 25-28 hàng tháng</strong> để cập nhật thông tin phương tiện trên phiếu thu chính xác.</p>
+            <p style="
+            margin-top: -11px;
+        ">Hạn thanh toán hết ngày <strong>15/{MONTH_NOW}/{YEAR_NOW}</strong>.</p>
+            <p style="
+            margin-top: -13px;
+        ">Mọi thắc mắc vui lòng liên hệ số điện thoại: <strong>0356333466</strong> hoặc <strong>zalo 0356333466</strong>.</p>
+            <p style="
+            margin-top: -13px;
+        ">Trân trọng thông báo!</p>
+            <p style="
+            margin-top: -13px;
+        ">Ban Quản lý vận hành Cụm Chung cư Văn phòng Quốc Hội</p>
+            
+        </footer>
+    </div>
+</body>
+</html>
